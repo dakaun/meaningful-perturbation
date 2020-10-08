@@ -63,7 +63,7 @@ max_iterations = 500
 model = tf.keras.applications.VGG19(weights='imagenet')
 model.trainable = False
 
-original_img = cv2.imread('/home/student/PycharmProjects/pytorch_perturbation/pytorch-explain-black-box/examples/Coffee-Mug.jpg', 1)#('/home/student/PycharmProjects/pytorch_perturbation/pytorch-explain-black-box/examples/flute.jpg', 1)
+original_img = cv2.imread('examples/flute.jpg', 1)#('/home/student/PycharmProjects/pytorch_perturbation/pytorch-explain-black-box/examples/flute.jpg', 1)
 original_img = cv2.resize(original_img, (224, 224))
 
 img = np.float32(original_img) / 255
