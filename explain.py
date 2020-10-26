@@ -63,7 +63,9 @@ max_iterations = 500
 model = tf.keras.applications.VGG19(weights='imagenet')
 model.trainable = False
 
-original_img = cv2.imread('examples/flute.jpg', 1)#('/home/student/PycharmProjects/pytorch_perturbation/pytorch-explain-black-box/examples/flute.jpg', 1)
+path =  '/home/student/PycharmProjects/tf2_meaningful_perturbation/examples/YellowLabradorLooking_new.jpg'
+# 'examples/flute.jpg'
+original_img = cv2.imread(path, 1)#('/home/student/PycharmProjects/pytorch_perturbation/pytorch-explain-black-box/examples/flute.jpg', 1)
 original_img = cv2.resize(original_img, (224, 224))
 
 img = np.float32(original_img) / 255
@@ -85,7 +87,8 @@ mask = tf.Variable(mask, trainable=True)
 upsample = tf.keras.layers.UpSampling2D(size=(8,8), interpolation='bilinear')
 optimizer = tf.keras.optimizers.Adam(lr=learning_rate)
 
-target = tf.nn.softmax(model(img))
+target = model(img)
+#target = tf.nn.softmax(model(img))
 category = np.argmax(target)
 print('Category: ', category)
 start = time.time()
@@ -107,9 +110,11 @@ for i in range(50):
 
     perturbated_input = perturbated_input + noise
 
-    outputs = tf.nn.softmax(model(perturbated_input))
+    outputs = model(perturbated_input)
+    #outputs = tf.nn.softmax(model(perturbated_input))
     with tf.GradientTape() as tape:
         loss = l1_coeff*tf.reduce_mean(tf.abs(1-mask)) + tv_coeff*tv_norm(mask, tv_beta) + outputs[0, category]
+    print('Loss ', i, loss)
 
     grads = tape.gradient(loss, [mask])
     optimizer.apply_gradients(zip(grads, [mask]))
