@@ -76,8 +76,13 @@ blurred_img_numpy = (blurred_img1 + blurred_img2) / 2
 
 mask_init = np.ones((28, 28), dtype = np.float32)
 
-img = preprocess_image(img)
-blurred_img = preprocess_image(blurred_img2)
+# img = preprocess_image(img)
+#blurred_img = preprocess_image(blurred_img2)
+
+img = tf.keras.applications.vgg19.preprocess_input(img*255)
+img = tf.expand_dims(img, 0)
+blurred_img = tf.keras.applications.vgg19.preprocess_input(blurred_img2*255)
+blurred_img = tf.expand_dims(blurred_img, 0)
 
 mask = np.float32([mask_init])
 mask = tf.convert_to_tensor(mask)
